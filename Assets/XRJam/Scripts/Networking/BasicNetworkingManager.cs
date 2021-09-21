@@ -10,6 +10,8 @@ using Photon.Realtime;
 using Photon.Voice.PUN;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Android;
+
 
 /// <summary>
 /// A basic script to manage the connection to Photon Servers, as well as the creation/joining of a default room.
@@ -63,6 +65,18 @@ public class BasicNetworkingManager : MonoBehaviourPunCallbacks
             Instance = this;
         else if (Instance != this)
             Destroy(this);
+
+        // Checking for Camera and Microphone permissions on Android.
+#if PLATFORM_ANDROID
+        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+        {
+            Permission.RequestUserPermission(Permission.Microphone);
+        }
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
+        {
+            Permission.RequestUserPermission(Permission.Camera);
+        }
+#endif
 
         Debug.Log("Trying to connect to server");
 
